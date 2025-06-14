@@ -1,0 +1,54 @@
+version: '3.9'
+
+services:
+  # shops_service 
+  shops_web:
+    build:
+      context: ./shops_service
+    container_name: shops_web
+    env_file:
+      - ./shops_service/.env
+    depends_on:
+      - shops_db
+      - shops_redis
+      - shops_celery
+    ports:
+      - "8000:8000"
+    networks:
+      - shops_net
+    command: python manage.py runserver 0.0.0.0:8000
+
+  shops_celery:
+    build:
+      context: ./shops_service
+    container_name: shops_celery
+    env_file:
+      - ./shops_service/.env
+    depends_on:
+      - shops_db
+      - shops_redis
+    networks:
+      - shops_net
+    command: celery -A shops_service worker --loglevel=info
+
+  shops_db:
+    image: postgres:14
+    container_name: shops_db
+    env_file:
+      - ./shops_service/.env
+    volumes:
+      - shops_postgres_data:/var/lib/postgresql/data
+    networks:
+      - shops_net
+
+  shops_redis:
+    image: redis:6
+    container_name: shops_redis
+    networks:
+      - shops_net
+
+volumes:
+  shops_postgres_data:
+
+networks:
+  shops_net:
