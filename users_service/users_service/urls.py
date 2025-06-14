@@ -1,5 +1,7 @@
 from django.urls import path, include
 from django.contrib import admin
+from django.conf.urls.static import static
+from .settings import MEDIA_URL, MEDIA_ROOT
 
 from rest_framework_simplejwt.views import (
     TokenObtainPairView,
@@ -31,3 +33,4 @@ urlpatterns = [
     ),  # Token yeniləmək üçün
 ]
 
+urlpatterns += static(MEDIA_URL, document_root=MEDIA_ROOT)
