@@ -4,7 +4,7 @@ from django.db import models
 
 __all__ = (
     'Shop',
-)
+    )
 
 
 class Shop(models.Model):

@@ -1,13 +1,13 @@
 from rest_framework import serializers
 
 from shops.models.shop import Shop
-from shops.models.shop_activity import ShopActivity
+from shops_service.shops.models.shop_activity import ShopActivity
 
 
 __all__ = (
     'ShopSerializer',
     'ShopUpdateSerializer'
-)
+    )
 
 
 class ShopSerializer(serializers.ModelSerializer):

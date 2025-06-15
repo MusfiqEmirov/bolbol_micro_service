@@ -1,5 +1,6 @@
 from django.db import models
 
+
 __all__ = (
     'ShopActivity'
     )
@@ -7,14 +8,14 @@ __all__ = (
 
 class ShopActivity(models.Model):
     name = models.CharField(
-        "Name",
+        verbose_name="Name",
         max_length=64,
         unique=True,
         null=True,
         blank=True
     )
     is_active = models.BooleanField(
-        "Is active",
+        verbose_name="Is active",
         default=True
     )
 

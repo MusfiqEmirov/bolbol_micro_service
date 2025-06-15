@@ -6,7 +6,7 @@ from utils.validators import validate_phone_number
 
 __all__ = (
     'ShopContact',
-)
+    )
 
 
 class ShopContact(models.Model):
