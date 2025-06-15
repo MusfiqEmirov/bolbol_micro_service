@@ -15,16 +15,25 @@ class Shop(models.Model):
         null=True,
         blank=True
     )
+    # city = models.ForeignKey(
+    #     'products.City',
+    #     verbose_name='City',
+    #     on_delete=models.PROTECT,
+    #     related_name='shops',
+    #     related_query_name='shop',
+    #     null=True,
+    #     blank=True
+    # )
+    # activities = models.ManyToManyField(
+    #     'shops.ShopActivity', 
+    #     verbose_name='Shop Activities'
+    # )
     name = models.CharField(
         'Name',
         max_length=255,
         null=True,
         blank=True
     )
-    # activities = models.ManyToManyField(
-    #     'shops.ShopActivity', 
-    #     verbose_name='Shop Activities'
-    # )
     # slogan = models.CharField(
     #     'Slogan', 
     #     max_length=255, 
@@ -46,15 +55,6 @@ class Shop(models.Model):
     )
     bio = models.TextField(
         verbose_name='Intro text',
-        null=True,
-        blank=True
-    )
-    city = models.ForeignKey(
-        'products.City',
-        verbose_name='City',
-        on_delete=models.PROTECT,
-        related_name='shops',
-        related_query_name='shop',
         null=True,
         blank=True
     )
