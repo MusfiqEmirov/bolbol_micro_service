@@ -1,8 +1,20 @@
 from django.contrib import admin
 
 from shops.models.shop import Shop
-from .shop_working_hours_admin import ShopWorkingHoursInline
-from .shop_contact_admin import ShopContactInline
+from shops.models.shop_contact import ShopContact
+from shops.models.shop_working_hours import ShopWorkingHours
+
+
+class ShopContactInline(admin.TabularInline):
+    model = ShopContact
+    extra = 1
+    fields = ("phone_number",)
+
+
+class ShopWorkingHoursInline(admin.TabularInline):
+    model = ShopWorkingHours
+    extra = 1
+    fields = ("day_of_week", "opening_time", "closing_time")
 
 
 @admin.register(Shop)
@@ -31,4 +43,5 @@ class ShopAdmin(admin.ModelAdmin):
         return obj.owner.username if obj.owner else "No Owner"
 
     get_owner_username.short_description = "Owner"
+
 
