@@ -3,99 +3,94 @@ from django.db import models
 
 
 __all__ = (
-    "Shop"
+    'Shop',
 )
 
 
 class Shop(models.Model):
     owner = models.OneToOneField(
         settings.AUTH_USER_MODEL,
-        verbose_name="Owner",
+        verbose_name='Owner',
         on_delete=models.CASCADE,
         null=True,
         blank=True
     )
     name = models.CharField(
-        "Name",
+        'Name',
         max_length=255,
         null=True,
         blank=True
     )
-    activities = models.ManyToManyField(
-        "shops.ShopActivity", 
-        verbose_name="Shop Activities"
-    )
+    # activities = models.ManyToManyField(
+    #     'shops.ShopActivity', 
+    #     verbose_name='Shop Activities'
+    # )
     # slogan = models.CharField(
-    #     "Slogan", 
+    #     'Slogan', 
     #     max_length=255, 
     #     null=True, 
     #     blank=True
     # )
     logo = models.ImageField(
-        "Logo",
+        verbose_name='Logo',
         max_length=255,
-        upload_to="shops/logos/%Y/%m/%d",
+        upload_to='shops/logos/%Y/%m/%d',
         null=True,
         blank=True
     )
     address = models.TextField(
-        "Address",
+        verbose_name='Address',
         max_length=255,
         null=True, 
         blank=True
     )
     bio = models.TextField(
-        "Intro text",
+        verbose_name='Intro text',
         null=True,
         blank=True
     )
-
     city = models.ForeignKey(
-        "products.City",
-        verbose_name="City",
+        'products.City',
+        verbose_name='City',
         on_delete=models.PROTECT,
-        related_name="shops",
-        related_query_name="shop",
+        related_name='shops',
+        related_query_name='shop',
         null=True,
         blank=True
     )
-
     background_image = models.ImageField(
-        "Background image",
-        upload_to="shops/background/%Y/%m/%d",
+        verbose_name='Background image',
+        upload_to='shops/background/%Y/%m/%d',
         null=True,
         blank=True
     )
-    
     map_link = models.URLField(
-        "Map location link",
+        verbose_name='Map location link',
         max_length=255,
         null=True, 
         blank=True
     )
     map_latitude = models.FloatField(
-        "Map location latitude", 
+        verbose_name='Map location latitude', 
         null=True, 
         blank=True
     )
     map_longitude = models.FloatField(
-        "Map location longitude", 
+        verbose_name='Map location longitude', 
         null=True, 
         blank=True
     )
-
     is_active = models.BooleanField(
-        "Is active", 
+        verbose_name='Is active', 
         default=True
     )
-
     created_at = models.DateTimeField(
-        "Created at", 
+        verbose_name='Created at', 
         auto_now_add=True, 
         db_index=True
     )
     updated_at = models.DateTimeField(
-        "Updated at", 
+        verbose_name='Updated at', 
         auto_now=True
     )
     shop_working_hours_data = models.JSONField(
@@ -105,8 +100,8 @@ class Shop(models.Model):
     )
 
     class Meta:
-        verbose_name = "Shop"
-        verbose_name_plural = "Shops"
+        verbose_name = 'Shop'
+        verbose_name_plural = 'Shops'
 
     def __str__(self):
-        return f"{self.name}"
+        return f'{self.name}'

@@ -2,23 +2,23 @@ from django.db import models
 
 from .shop import Shop
 from utils.validators import validate_phone_number
-from utils.constants import TimeIntervals
 
 
 __all__ = (
-    "ShopContact",
+    'ShopContact',
 )
+
 
 class ShopContact(models.Model):
     shop = models.ForeignKey(
         Shop,
-        verbose_name="Shop",
+        verbose_name='Shop',
         on_delete=models.CASCADE,
-        related_name="contacts",
-        related_query_name="contact",
+        related_name='contacts',
+        related_query_name='contact',
     )
     phone_number = models.CharField(
-        "Phone number", 
+        'Phone number', 
         max_length=255, 
         validators=[validate_phone_number],
         null=True,
@@ -26,8 +26,8 @@ class ShopContact(models.Model):
     )
 
     class Meta:
-        verbose_name = "Shop contact"
-        verbose_name_plural = "Shop contacts"
+        verbose_name = 'Shop contact'
+        verbose_name_plural = 'Shop contacts'
 
     def __str__(self):
-        return f"{self.phone_number}"
+        return f'{self.phone_number}'
