@@ -4,6 +4,12 @@ from shops.models.shop import Shop
 from shops.models.shop_contact import ShopContact
 from shops.models.shop_working_hours import ShopWorkingHours
 
+__all__ = (
+    'ShopContactInline',
+    'ShopWorkingHoursInline',
+    'ShopAdmin'
+)
+
 
 class ShopContactInline(admin.TabularInline):
     model = ShopContact
