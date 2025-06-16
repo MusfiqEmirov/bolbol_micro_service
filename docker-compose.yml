@@ -4,10 +4,8 @@ services:
   shops_db:
     image: postgres:14
     container_name: shops_db
-    environment:
-      - POSTGRES_DB=${POSTGRES_DB}
-      - POSTGRES_USER=${POSTGRES_USER}
-      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+    env_file:
+      - ./shops_service/.env
     ports:
       - "5432:5432"
     volumes:
@@ -18,10 +16,8 @@ services:
   shops_redis:
     image: redis:6
     container_name: shops_redis
-    environment:
-      - REDIS_HOST=${REDIS_HOST}
-      - REDIS_PORT=${REDIS_PORT}
-      - REDIS_DB=${REDIS_DB}
+    env_file:
+      - ./shops_service/.env
     ports:
       - "6379:6379"
     networks:
@@ -31,17 +27,8 @@ services:
     build:
       context: ./shops_service
     container_name: shops_celery
-    environment:
-      - POSTGRES_DB=${POSTGRES_DB}
-      - POSTGRES_USER=${POSTGRES_USER}
-      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
-      - POSTGRES_HOST=${POSTGRES_HOST}
-      - POSTGRES_PORT=${POSTGRES_PORT}
-      - CELERY_BROKER_URL=${CELERY_BROKER_URL}
-      - CELERY_RESULT_BACKEND=${CELERY_RESULT_BACKEND}
-      - REDIS_HOST=${REDIS_HOST}
-      - REDIS_PORT=${REDIS_PORT}
-      - REDIS_DB=${REDIS_DB}
+    env_file:
+      - ./shops_service/.env
     depends_on:
       - shops_db
       - shops_redis
@@ -53,18 +40,8 @@ services:
     build:
       context: ./shops_service
     container_name: shops_web
-    environment:
-      - SECRET_KEY=${SECRET_KEY}
-      - POSTGRES_DB=${POSTGRES_DB}
-      - POSTGRES_USER=${POSTGRES_USER}
-      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
-      - POSTGRES_HOST=${POSTGRES_HOST}
-      - POSTGRES_PORT=${POSTGRES_PORT}
-      - CELERY_BROKER_URL=${CELERY_BROKER_URL}
-      - CELERY_RESULT_BACKEND=${CELERY_RESULT_BACKEND}
-      - REDIS_HOST=${REDIS_HOST}
-      - REDIS_PORT=${REDIS_PORT}
-      - REDIS_DB=${REDIS_DB}
+    env_file:
+      - ./shops_service/.env
     depends_on:
       - shops_db
       - shops_redis
@@ -73,10 +50,77 @@ services:
       - "8000:8000"
     networks:
       - shops_net
-    command: python manage.py runserver 0.0.0.0:8000
+    command: >
+      sh -c "
+      while ! nc -z shops_db 5432;
+      do
+        echo 'Waiting for Postgres...';
+        sleep 1;
+      done;
+      echo 'Postgres is up - executing migrations';
+      python manage.py migrate &&
+      echo 'Starting Django server';
+      python manage.py runserver 0.0.0.0:8000
+      "
+
+  user_db:
+    image: postgres:14
+    container_name: users_db
+    env_file:
+      - ./users_service/.env
+    ports:
+      - "5433:5432"   # Hostun 5433 -> konteynerin 5432 portu
+    volumes:
+      - user_postgres_data:/var/lib/postgresql/data
+    networks:
+      - shops_net
+    healthcheck:
+      test: ["CMD", "pg_isready", "-U", "users_admin"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  users_redis:
+    image: redis:6
+    container_name: users_redis
+    env_file:
+      - ./users_service/.env
+    ports:
+      - "6380:6379"
+    networks:
+      - shops_net
+
+  user_service:
+    build:
+      context: ./users_service
+    container_name: users_service
+    env_file:
+      - ./users_service/.env
+    depends_on:
+      user_db:
+        condition: service_healthy
+      users_redis:
+        condition: service_started
+    ports:
+      - "8001:8001"
+    networks:
+      - shops_net
+    command: >
+      sh -c "
+      while ! nc -z users_db 5432;
+      do
+        echo 'Waiting for Postgres...';
+        sleep 1;
+      done;
+      echo 'Postgres is up - executing migrations';
+      python manage.py migrate &&
+      echo 'Starting Django server';
+      python manage.py runserver 0.0.0.0:8001
+      "
 
 volumes:
   postgres_data:
+  user_postgres_data:
 
 networks:
   shops_net:
