@@ -4,9 +4,9 @@ from .shop import Shop
 from utils.constants import TimeIntervals
 
 
-__all__ = (
+__all__ = [
     'ShopWorkingHours',
-    )
+    ]
 
 
 class ShopWorkingHours(models.Model):

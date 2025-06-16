@@ -1,9 +1,9 @@
 from django.db import models
 
 
-__all__ = (
+__all__ = [
     'ShopRegistrationRequest',
-    )
+    ]
 
 
 class ShopRegistrationRequest(models.Model):

@@ -3,11 +3,6 @@ from django.contrib import admin
 from shops.models import ShopRegistrationRequest
 
 
-__all__ = (
-    'ShopRegistrationRequestAdmin'
-)
-
-
 @admin.register(ShopRegistrationRequest)
 class ShopRegistrationRequestAdmin(admin.ModelAdmin):
     list_display = ("shop_owner_full_name", "shop_name", "shop_owner", "status", "get_shop_activities", "created_at", "updated_at")

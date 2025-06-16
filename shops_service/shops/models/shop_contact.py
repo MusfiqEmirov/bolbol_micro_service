@@ -4,9 +4,9 @@ from .shop import Shop
 from utils.validators import validate_phone_number
 
 
-__all__ = (
+__all__ = [
     'ShopContact',
-    )
+    ]
 
 
 class ShopContact(models.Model):

@@ -3,9 +3,9 @@ from rest_framework import serializers
 from shops.models.shop_registration import ShopRegistrationRequest
 
 
-__all__ = (
-    'ShopRegistrationRequestSerializer'
-    )
+__all__ = [
+    'ShopRegistrationRequestSerializer',
+    ]
 
 class ShopRegistrationRequestSerializer(serializers.ModelSerializer):
     class Meta:

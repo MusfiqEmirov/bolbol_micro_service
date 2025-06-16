@@ -2,9 +2,6 @@ from django.contrib import admin
 
 from shops.models import ShopActivity
 
-__all__ = (
-    'ShopActivityAdmin'
-)
 
 @admin.register(ShopActivity)
 class ShopActivityAdmin(admin.ModelAdmin):

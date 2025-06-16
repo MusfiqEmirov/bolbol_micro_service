@@ -1,9 +1,9 @@
 from django.db import models
 
 
-__all__ = (
-    'ShopActivity'
-    )
+__all__ = [
+    'ShopActivity',
+    ]
 
 
 class ShopActivity(models.Model):

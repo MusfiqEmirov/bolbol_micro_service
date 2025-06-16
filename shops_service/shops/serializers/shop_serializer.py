@@ -4,10 +4,10 @@ from shops.models.shop import Shop
 from shops_service.shops.models.shop_activity import ShopActivity
 
 
-__all__ = (
+__all__ = [
     'ShopSerializer',
     'ShopUpdateSerializer'
-    )
+    ]
 
 
 class ShopSerializer(serializers.ModelSerializer):
