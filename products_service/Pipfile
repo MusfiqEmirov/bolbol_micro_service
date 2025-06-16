@@ -4,8 +4,22 @@ verify_ssl = true
 name = "pypi"
 
 [packages]
+django = "*"
+djangorestframework = "*"
+djangorestframework-simplejwt = "*"
+python-dotenv = "*"
+django-cors-headers = "*"
+psycopg2-binary = "*"
+django-celery-results = "*"
+celery = "*"
+redis = "*"
+elasticsearch-dsl = "*"
+gunicorn = "*"
 
 [dev-packages]
+black = "*"
+isort = "*"
+flake8 = "*"
 
 [requires]
 python_version = "3.13"
