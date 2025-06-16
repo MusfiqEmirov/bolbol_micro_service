@@ -4,6 +4,12 @@ verify_ssl = true
 name = "pypi"
 
 [packages]
+psycopg2-binary = "*"
+django = "*"
+djangorestframework = "*"
+djangorestframework-simplejwt = "*"
+python-dotenv = "*"
+pillow = "*"
 
 [dev-packages]
 

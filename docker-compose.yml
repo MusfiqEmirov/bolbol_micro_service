@@ -1,0 +1,83 @@
+version: '3.9'
+
+services:
+  shops_db:
+    image: postgres:14
+    container_name: shops_db
+    environment:
+      - POSTGRES_DB=${POSTGRES_DB}
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - shops_net
+
+  shops_redis:
+    image: redis:6
+    container_name: shops_redis
+    environment:
+      - REDIS_HOST=${REDIS_HOST}
+      - REDIS_PORT=${REDIS_PORT}
+      - REDIS_DB=${REDIS_DB}
+    ports:
+      - "6379:6379"
+    networks:
+      - shops_net
+
+  shops_celery:
+    build:
+      context: ./shops_service
+    container_name: shops_celery
+    environment:
+      - POSTGRES_DB=${POSTGRES_DB}
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - POSTGRES_HOST=${POSTGRES_HOST}
+      - POSTGRES_PORT=${POSTGRES_PORT}
+      - CELERY_BROKER_URL=${CELERY_BROKER_URL}
+      - CELERY_RESULT_BACKEND=${CELERY_RESULT_BACKEND}
+      - REDIS_HOST=${REDIS_HOST}
+      - REDIS_PORT=${REDIS_PORT}
+      - REDIS_DB=${REDIS_DB}
+    depends_on:
+      - shops_db
+      - shops_redis
+    networks:
+      - shops_net
+    command: celery -A shops_service worker --loglevel=info
+
+  shops_web:
+    build:
+      context: ./shops_service
+    container_name: shops_web
+    environment:
+      - SECRET_KEY=${SECRET_KEY}
+      - POSTGRES_DB=${POSTGRES_DB}
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - POSTGRES_HOST=${POSTGRES_HOST}
+      - POSTGRES_PORT=${POSTGRES_PORT}
+      - CELERY_BROKER_URL=${CELERY_BROKER_URL}
+      - CELERY_RESULT_BACKEND=${CELERY_RESULT_BACKEND}
+      - REDIS_HOST=${REDIS_HOST}
+      - REDIS_PORT=${REDIS_PORT}
+      - REDIS_DB=${REDIS_DB}
+    depends_on:
+      - shops_db
+      - shops_redis
+      - shops_celery
+    ports:
+      - "8000:8000"
+    networks:
+      - shops_net
+    command: python manage.py runserver 0.0.0.0:8000
+
+volumes:
+  postgres_data:
+
+networks:
+  shops_net:
+    driver: bridge
